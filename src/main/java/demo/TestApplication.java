@@ -1,11 +1,10 @@
 package demo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import demo.dto.Car;
+import demo.dto.CarDto;
+import demo.dto.CarMapper;
+import res.AppProps;
+import res.Person;
 
 import java.util.List;
 
@@ -18,27 +17,21 @@ public class TestApplication {
         CarDto dto = CarMapper.INSTANCE.toDto(new Car(10L, "Honda"));
         out.println(dto.getCarMaker());
 
+        //test 0 - testing extension fn
+        new Car(1L, "Toyota").drive(100);
+
+        //test 1 - extension fn from manifest
         out.println(List.of("A", "B", "C").last());
+
+        //test 2 - custom ext fn
+        out.println("test".getTotalLength("another"));
+
+        //test3 - property mapping
+        out.println(AppProps.name);
+
+        //test4 - json
+        out.println(Person.fromSource().getHobby().first());
+
+
     }
-}
-
-@Mapper
-interface CarMapper {
-    CarMapper INSTANCE = Mappers.getMapper(CarMapper.class);
-
-    @Mapping(source = "make", target = "carMaker")
-    CarDto toDto(Car car);
-}
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-class Car {
-    Long id;
-    String make;
-}
-
-@Data
-class CarDto {
-    String carMaker;
 }
